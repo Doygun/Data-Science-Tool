@@ -29,7 +29,8 @@ Fast, easy to use, and scalable data science tool
 3. Data Integration
 4. Data Transformation
 5. Data Discretization
-6. Data Reduction
+6. Data Filtering
+7. Data Reduction
 
 
 
