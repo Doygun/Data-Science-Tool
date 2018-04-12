@@ -15,9 +15,10 @@ Fast, easy to use, and scalable data science tool
 
 ### 1. Data Collection
 
-1. Collecting Data
-2. Importing Data
-3. Exporting Data
+1. Data Collector
+2. Data Loader
+     1. Importing Data
+     2. Exporting Data
 
 --------------------------------------------------------------------------------------------
 
@@ -33,8 +34,10 @@ Fast, easy to use, and scalable data science tool
 
 
 
+--------------------------------------------------------------------------------------------
 
-
+### License
+Data Science Tool is built on open source technologies, my code is licensed with the [Apache License 2.0.](https://github.com/SerayBeser/Data-Science-Tool/blob/master/LICENSE)
 
 
 
