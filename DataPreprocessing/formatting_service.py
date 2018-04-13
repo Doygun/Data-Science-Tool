@@ -36,6 +36,7 @@ class FormattingService(object):
     def open_file(self):
         """
         open file
+        :return data, data_header
         """
         try:
             if str(self.form).lower() == 'csv':
@@ -46,6 +47,7 @@ class FormattingService(object):
                 if self.header:
                     self.data_header = self.data[0]
                     self.data.remove(self.data[0])
+                self.fill_none()
                 return self.data, self.data_header
 
             if str(self.form).lower() == 'tsv':
@@ -56,6 +58,7 @@ class FormattingService(object):
                 if self.header:
                     self.data_header = self.data[0]
                     self.data.remove(self.data[0])
+                self.fill_none()
                 return self.data, self.data_header
 
             if str(self.form).lower() == 'json':
@@ -79,7 +82,9 @@ class FormattingService(object):
                         for column in range(worksheet.ncols):
                             value.append(worksheet.cell_value(row, column))
                         self.data.append(value)
-            return self.data, self.data_header
+                self.fill_none()
+                return self.data, self.data_header
+
         except IOError as e:
             print (e)
 
@@ -113,11 +118,29 @@ class FormattingService(object):
         except IOError as e:
             print (e)
 
+    def fill_none(self):
+        """
+
+        :return:
+        """
+        for i in range(0, len(self.data)):
+            for j in range(0, len(self.data[0])):
+                if len(str(self.data[i][j])) == 0:
+                    self.data[i][j] = None
+
+        for i in range(0, len(self.data_header)):
+            if len(str(self.data_header[i])) == 0:
+                self.data_header[i] = None
+
     def convert_csv(self):
         """
         convert_csv
         """
-        pass
+        with open('new.csv', 'w') as csv_file:
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow(self.data_header)
+            for row in self.data:
+                csv_writer.writerow(row)
 
     def convert_json(self):
         """
@@ -152,28 +175,30 @@ class FormattingService(object):
 
 if __name__ == '__main__':
     fs = FormattingService(form='csv', path='deneme.csv')
-    fs.print_file()
-    print('-' * 100)
+    # fs.print_file()
+    # print('-' * 100)
 
     fs = FormattingService(form='csv', path='deneme.csv', header=True)
-    fs.print_file()
-    print('-' * 100)
+    # fs.print_file()
+    # print('-' * 100)
 
     fs = FormattingService(form='tsv', path='deneme_tsv.tsv')
-    fs.print_file()
-    print('-' * 100)
+    fs.convert_csv()
+    # fs.print_file()
+    # print('-' * 100)
 
     fs = FormattingService(form='tsv', path='deneme_tsv.tsv', header=True)
-    fs.print_file()
-    print('-' * 100)
-
-    fs = FormattingService(form='xls', path='tests-example.xls')
-    fs.print_file()
-    print('-' * 100)
+    # fs.print_file()
+    # print('-' * 100)
 
     fs = FormattingService(form='xls', path='tests-example.xls', header=True)
-    fs.print_file()
-    print('-' * 100)
+    # fs.convert_csv()
+    # fs.print_file()
+    # print('-' * 100)
+
+    fs = FormattingService(form='xls', path='tests-example.xls', header=True)
+    # fs.print_file()
+    # print('-' * 100)
 
     # fs = FormattingService(form='json', path='deneme_json.json')
     # fs.print_file()
