@@ -14,10 +14,10 @@ class ExportService(object):
     """
     Basic Usage:
 
-    >> export_service = ExportService(service_name='Mongo', database_name='database_name',
+    >> export_service_ = ExportService(service_name='Mongo', database_name='database_name',
                                    collection_name='collection_name')
 
-    >> export_service.export_data(data=[{'name': 'seray'}])
+    >> export_service_.export_data(data=[{'name': 'seray'}])
 
     """
 

@@ -14,19 +14,19 @@ class ImportService(object):
     """
     Basic Usage:
 
-    >> import_service = ImportService(service_name='Mongo', database_name='database_name',
+    >> import_service_ = ImportService(service_name='Mongo', database_name='database_name',
                                    collection_name='collection_name')
 
-    >> print import_service.import_data(query={'name': 'seray'})
+    >> print import_service_.import_data(query={'name': 'seray'})
 
-    >> import_service = ImportService(service_name='Elasticsearch', url='10.10.10.10:10', index='index_name')
+    >> import_service_ = ImportService(service_name='Elasticsearch', url='10.10.10.10:10', index='index_name')
 
     >> query = {
         "query": {"match_all": {}},
         "size": 1,
         "from": 2 }
 
-    dump = import_service.import_data(query)
+    dump = import_service_.import_data(query)
 
     for i in range(0, 1):
         print dump['hits']['hits'][i]['_source']['body']
