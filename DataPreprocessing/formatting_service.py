@@ -56,6 +56,7 @@ class FormattingService(object):
                 if self.header:
                     self.data_header = self.data[0]
                     self.data.remove(self.data[0])
+                self.fill_none()
                 return self.data, self.data_header
 
             if str(self.form).lower() == 'tsv':
@@ -124,6 +125,20 @@ class FormattingService(object):
 
         except IOError as e:
             print (e)
+
+    def fill_none(self):
+        """
+
+        :return:
+        """
+        for i in range(0, len(self.data)):
+            for j in range(0, len(self.data[0])):
+                if len(str(self.data[i][j]).strip()) == 0:
+                    self.data[i][j] = None
+
+        for i in range(0, len(self.data_header)):
+            if len(str(self.data_header[i]).strip()) == 0:
+                self.data_header[i] = None
 
     def convert_csv(self):
         """
