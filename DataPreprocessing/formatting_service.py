@@ -4,20 +4,24 @@
 Formatting Service
 """
 
+__author__ = 'Seray Beser'
+__copyright__ = 'Copyright 2018 Seray Beser'
+__license__ = 'Apache License 2.0'
+__version__ = '0.0.1'
+__email__ = 'seraybeserr@gmail.com'
+__status__ = 'Development'
+
 import csv
 import json
 from pprint import pprint
 import xmltodict
 import xlrd
-
 import pandas as pd
-
-__author__ = 'Seray Beser'
 
 
 class FormattingService(object):
     """
-    Formatting Service
+    Formatting Service Class
 
     Import is supported from following formats: csv,tsv,json,xml,xls
     Export is supported in following formats: csv,tsv,json,xml,xls
@@ -52,7 +56,6 @@ class FormattingService(object):
                 if self.header:
                     self.data_header = self.data[0]
                     self.data.remove(self.data[0])
-                self.fill_none()
                 return self.data, self.data_header
 
             if str(self.form).lower() == 'tsv':
@@ -63,7 +66,6 @@ class FormattingService(object):
                 if self.header:
                     self.data_header = self.data[0]
                     self.data.remove(self.data[0])
-                self.fill_none()
                 return self.data, self.data_header
 
             if str(self.form).lower() == 'json':
@@ -92,7 +94,6 @@ class FormattingService(object):
                         for column in range(worksheet.ncols):
                             value.append(worksheet.cell_value(row, column))
                         self.data.append(value)
-                self.fill_none()
                 return self.data, self.data_header
 
         except IOError as e:
@@ -124,20 +125,6 @@ class FormattingService(object):
         except IOError as e:
             print (e)
 
-    def fill_none(self):
-        """
-
-        :return:
-        """
-        for i in range(0, len(self.data)):
-            for j in range(0, len(self.data[0])):
-                if len(str(self.data[i][j])) == 0:
-                    self.data[i][j] = None
-
-        for i in range(0, len(self.data_header)):
-            if len(str(self.data_header[i])) == 0:
-                self.data_header[i] = None
-
     def convert_csv(self):
         """
         convert_csv
@@ -158,7 +145,11 @@ class FormattingService(object):
         """
         convert_tsv
         """
-        pass
+        with open(str(self.path) + '_new.tsv', 'w') as tsv_file:
+            tsv_writer = csv.writer(tsv_file, delimiter='\t')
+            tsv_writer.writerow(self.data_header)
+            for row in self.data:
+                tsv_writer.writerow(row)
 
     def convert_xml(self):
         """
@@ -186,48 +177,48 @@ def test():
     """
     test method for FormattingService
     """
-    fs = FormattingService(form='csv', path='example.csv', header_names=["col 1", "col 2", "col 3", "col 4"])
+    fs = FormattingService(form='csv', path='test_data/example.csv', header_names=["col 1", "col 2", "col 3", "col 4"])
     # fs.print_file()
     print(fs.convert_dataframe())
     print('-' * 100)
 
-    fs = FormattingService(form='csv', path='example.csv', header=True)
+    fs = FormattingService(form='csv', path='test_data/example.csv', header=True)
     # fs.print_file()
     print(fs.convert_dataframe())
     print('-' * 100)
 
-    fs = FormattingService(form='tsv', path='example.tsv')
+    fs = FormattingService(form='tsv', path='test_data/example.tsv')
     # fs.print_file()
     print(fs.convert_dataframe())
     print('-' * 100)
 
-    fs = FormattingService(form='tsv', path='example.tsv', header=True)
+    fs = FormattingService(form='tsv', path='test_data/example.tsv', header=True)
     # fs.print_file()
     print(fs.convert_dataframe())
     print('-' * 100)
     # fs.convert_csv()
 
-    fs = FormattingService(form='xls', path='example.xls')
+    fs = FormattingService(form='xls', path='test_data/example.xls')
     # fs.convert_csv()
     # fs.print_file()
     print(fs.convert_dataframe())
     print('-' * 100)
+    # fs.convert_tsv()
 
-    fs = FormattingService(form='xls', path='example.xls', header=True)
+    fs = FormattingService(form='xls', path='test_data/example.xls', header=True)
     # fs.print_file()
     print(fs.convert_dataframe())
     print('-' * 100)
 
-    fs = FormattingService(form='json', path='example.json')
+    fs = FormattingService(form='json', path='test_data/example.json')
     # fs.print_file()
     # fs.convert_csv()
     print(fs.convert_dataframe())
     print('-' * 100)
 
-    fs = FormattingService(form='xml', path='example.xml')
+    fs = FormattingService(form='xml', path='test_data/example.xml')
     # fs.print_file()
     print(fs.convert_dataframe())
-
     print('-' * 100)
 
 
