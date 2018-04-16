@@ -10,6 +10,8 @@ from pprint import pprint
 import xmltodict
 import xlrd
 
+import pandas as pd
+
 __author__ = 'Seray Beser'
 
 
@@ -23,15 +25,18 @@ class FormattingService(object):
 
     """
 
-    def __init__(self, form=None, path=None, header=False, save=False):
+    def __init__(self, form=None, path=None, header=False, save=False, header_names=None):
         self.form = form
         self.path = path
         self.header = header
         self.save = save
         self.data = list()
         self.data_header = list()
-
+        self.header_names = header_names
         self.open_file()
+
+        if self.header_names:
+            self.data_header = self.header_names
 
     def open_file(self):
         """
@@ -62,9 +67,14 @@ class FormattingService(object):
                 return self.data, self.data_header
 
             if str(self.form).lower() == 'json':
-                pass
+                with open(self.path) as json_file:
+                    self.data = json.loads(json_file.read())
+
             if str(self.form).lower() == 'xml':
-                pass
+                with open(self.path) as data_file:
+                    data = data_file.read()
+                self.data = json.loads(json.dumps(xmltodict.parse(data)))
+
             if str(self.form).lower() == 'xls':
                 workbook = xlrd.open_workbook(self.path)
                 worksheet = workbook.sheet_by_index(0)
@@ -102,14 +112,10 @@ class FormattingService(object):
                 pprint(self.data)
 
             if str(self.form).lower() == 'json':
-                with open(self.path) as json_file:
-                    data = json.loads(json_file.read())
-                pprint(data)
+                pprint(self.data)
 
             if str(self.form).lower() == 'xml':
-                with open(self.path) as data_file:
-                    data = data_file.read()
-                pprint(json.loads(json.dumps(xmltodict.parse(data))))
+                pprint(self.data)
 
             if str(self.form).lower() == 'xls':
                 pprint(self.data_header)
@@ -136,7 +142,7 @@ class FormattingService(object):
         """
         convert_csv
         """
-        with open('new.csv', 'w') as csv_file:
+        with open(str(self.path) + '_new.csv', 'w') as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(self.data_header)
             for row in self.data:
@@ -170,36 +176,60 @@ class FormattingService(object):
         """
         convert_dataframe
         """
-        pass
+        if self.header or self.header_names:
+            return pd.DataFrame(self.data, columns=self.data_header)
+        else:
+            return pd.DataFrame(self.data)
+
+
+def test():
+    """
+    test method for FormattingService
+    """
+    fs = FormattingService(form='csv', path='example.csv', header_names=["col 1", "col 2", "col 3", "col 4"])
+    # fs.print_file()
+    print(fs.convert_dataframe())
+    print('-' * 100)
+
+    fs = FormattingService(form='csv', path='example.csv', header=True)
+    # fs.print_file()
+    print(fs.convert_dataframe())
+    print('-' * 100)
+
+    fs = FormattingService(form='tsv', path='example.tsv')
+    # fs.print_file()
+    print(fs.convert_dataframe())
+    print('-' * 100)
+
+    fs = FormattingService(form='tsv', path='example.tsv', header=True)
+    # fs.print_file()
+    print(fs.convert_dataframe())
+    print('-' * 100)
+    # fs.convert_csv()
+
+    fs = FormattingService(form='xls', path='example.xls')
+    # fs.convert_csv()
+    # fs.print_file()
+    print(fs.convert_dataframe())
+    print('-' * 100)
+
+    fs = FormattingService(form='xls', path='example.xls', header=True)
+    # fs.print_file()
+    print(fs.convert_dataframe())
+    print('-' * 100)
+
+    fs = FormattingService(form='json', path='example.json')
+    # fs.print_file()
+    # fs.convert_csv()
+    print(fs.convert_dataframe())
+    print('-' * 100)
+
+    fs = FormattingService(form='xml', path='example.xml')
+    # fs.print_file()
+    print(fs.convert_dataframe())
+
+    print('-' * 100)
 
 
 if __name__ == '__main__':
-    fs = FormattingService(form='csv', path='deneme.csv')
-    # fs.print_file()
-    # print('-' * 100)
-
-    fs = FormattingService(form='csv', path='deneme.csv', header=True)
-    # fs.print_file()
-    # print('-' * 100)
-
-    fs = FormattingService(form='tsv', path='deneme_tsv.tsv')
-    fs.convert_csv()
-    # fs.print_file()
-    # print('-' * 100)
-
-    fs = FormattingService(form='tsv', path='deneme_tsv.tsv', header=True)
-    # fs.print_file()
-    # print('-' * 100)
-
-    fs = FormattingService(form='xls', path='tests-example.xls', header=True)
-    # fs.convert_csv()
-    # fs.print_file()
-    # print('-' * 100)
-
-    fs = FormattingService(form='xls', path='tests-example.xls', header=True)
-    # fs.print_file()
-    # print('-' * 100)
-
-    # fs = FormattingService(form='json', path='deneme_json.json')
-    # fs.print_file()
-    # fs = FormattingService(form='xml', path='deneme_xml.xml')
+    test()
