@@ -20,6 +20,9 @@ class PreprocessService(object):
 
     Basic Usage:
 
+    >>      fs = FormattingService(form='csv', path='test_data/example.csv', header=True)
+    >>      data = fs.convert_dataframe()
+
     >>      preprocess = PreprocessService(data=data)
     >>      service = preprocess.service('Cleaning')
 
@@ -40,7 +43,7 @@ class PreprocessService(object):
             return DataCleaning(data=self.data)
 
 
-def cleaning_service_test():
+def test_cleaning_service():
     """
 
     test method for preprocess service
@@ -104,4 +107,4 @@ def cleaning_service_test():
 
 
 if __name__ == '__main__':
-    cleaning_service_test()
+    test_cleaning_service()
